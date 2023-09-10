@@ -1,0 +1,24 @@
+<div class="container">
+  <p><a href="javascript:window.history.back()" class="icon-link">Back</a></p>
+  <article>
+    <section class="listing-description">
+      <p><button [routerLink]="['/editVehicle', getLicensePlate()]" type="button" class="btn btn-primary btn-sm">Edit</button> </p>
+      <h2 class="listing-heading">{{vehicleInfo?.name}}</h2>
+      <p class="listing-location">{{getLicensePlate()}}</p>
+    </section>
+    <section class="listing-features">
+      <h2 class="section-heading">{{vehicleInfo?.brand}} {{vehicleInfo?.model}}</h2>
+      <ul>
+        <li><b>Year:</b> {{vehicleInfo?.year}}</li>
+        <li><b>Category:</b> {{vehicleInfo?.category}}</li>
+        <li><b>Odometer:</b> {{vehicleInfo?.odometer}} km</li>
+        <li>
+          <b>Next Maintenance:</b>
+          {{nextMaintenance?.refOdometer}} km
+          <span *ngIf="nextMaintenance?.delayed" class="badge rounded-pill text-bg-danger">Delayed</span><br>
+          <button [routerLink]="['/registerMaintenance', getLicensePlate(), nextMaintenance?.refOdometer, vehicleInfo?.odometer]" type="button" class="btn btn-primary btn-sm">Register Maintenance</button>
+        </li>
+      </ul>
+    </section>
+  </article>
+</div>

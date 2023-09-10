@@ -1,0 +1,25 @@
+<div class="container py-4">
+  <h2>Done Maintenances</h2>
+  <table class="table table-striped">
+    <thead class="table-danger">
+      <tr>
+        <th>License Plate</th>
+        <th>Date</th>
+        <th>Value</th>
+        <th>Reference Odometer</th>
+        <th>Read Odometer</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let maintenance of maintenancesList">
+        <td><a [routerLink]="['/vehicleDetails', maintenance.licensePlate]">{{ maintenance.licensePlate.toUpperCase() }}</a></td>
+        <td>{{ maintenance.date.toLocaleDateString() }}</td>
+        <td>R$ {{ maintenance.value }}</td>
+        <td>{{ maintenance.referenceOdometer }} km</td>
+        <td>{{ maintenance.readOdometer }} km</td>
+        <td>{{ maintenance.description }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

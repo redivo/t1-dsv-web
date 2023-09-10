@@ -1,0 +1,50 @@
+<div class="container">
+  <p><a href="javascript:window.history.back()" class="icon-link">Back</a></p>
+  <section>
+    <h2>{{title}}</h2>
+    <form [formGroup]="vehicleForm" (submit)="submitApplication()">
+      <div class="mb-3">
+        <label class="form-label" for="name">Name</label>
+        <input class="form-control" id="name" type="text" minlength="1" maxlength="20" formControlName="name">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="licensePlate">License Plate</label>
+        <input class="form-control" id="licensePlate" type="text" minlength="7" maxlength="8" formControlName="licensePlate">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="brand">Brand</label>
+        <input class="form-control" id="brand" type="text" formControlName="brand">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="model">Model</label>
+        <input class="form-control" id="model" type="text" formControlName="model">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="year">Year</label>
+        <input class="form-control" id="year" type="number" formControlName="year">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="odometer">Odometer</label>
+        <input class="form-control" id="odometer" type="number" formControlName="odometer">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="category">Category</label>
+        <select class="form-select" id="category" formControlName="category">
+          <option value="Delivery">Delivery</option>
+          <option value="Animal Truck">Animal Truck</option>
+          <option value="Auxiliary">Auxiliary</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <button [disabled]="vehicleForm.invalid" type="submit" class="btn btn-secondary">{{button}}</button>
+      </div>
+    </form>
+  </section>
+</div>

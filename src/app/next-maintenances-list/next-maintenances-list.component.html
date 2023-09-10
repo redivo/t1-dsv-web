@@ -1,0 +1,22 @@
+<div class="container py-4">
+  <h2>Next Maintenances</h2>
+  <table class="table table-striped">
+    <thead class="table-danger">
+      <tr>
+        <th>License Plate</th>
+        <th>Reference Odometer</th>
+        <th>Read Odometer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let maintenance of nextMaintenances">
+        <td><a [routerLink]="['/vehicleDetails', maintenance.licensePlate]">{{ maintenance.licensePlate.toUpperCase() }}</a></td>
+        <td>{{ maintenance.refOdometer }} km</td>
+        <td>
+          {{ maintenance.readOdometer }} km
+          <span *ngIf="maintenance.delayed" class="badge rounded-pill text-bg-danger">Delayed</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,29 @@
+<table class="table table-striped">
+  <thead class="table-danger">
+    <tr>
+      <th>Name</th>
+      <th>License Plate</th>
+      <th>Brand</th>
+      <th>Model</th>
+      <th>Year</th>
+      <th>Odometer</th>
+      <th>Category</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let vehicle of vehiclesList">
+      <td>{{ vehicle.name }}</td>
+      <td>{{ vehicle.licensePlate.toUpperCase() }}</td>
+      <td>{{ vehicle.brand }}</td>
+      <td>{{ vehicle.model }}</td>
+      <td>{{ vehicle.year }}</td>
+      <td>{{ vehicle.odometer }} km</td>
+      <td>{{ vehicle.category }}</td>
+      <td><a [routerLink]="['/vehicleDetails', vehicle.licensePlate]">Detail</a></td>
+    </tr>
+    <tr>
+      <td colspan="8" class="text-center"><button class="btn btn-primary" [routerLink]="['/addVehicle']">Add Vehicle</button></td>
+    </tr>
+  </tbody>
+</table>
