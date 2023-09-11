@@ -3,9 +3,9 @@ const router = app.Router();
 const {getItemReview, createItemReview} = require ('../controllers/itemReviewController')
 
 
-//######## ROTAS DISPONÍVEIS
+//######## Available Routes
 
- //GET
+//GET
 router.get('/', async (req, res) => {
     try {
 
@@ -18,8 +18,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-
- //POST
+//POST
 router.post('/', async (req, res) => {
   try {
 
@@ -30,19 +29,4 @@ router.post('/', async (req, res) => {
   }
 })
 
-
-
-
-
-
-
-
-
 module.exports = {router};
-
-
-
-
-  
-  
-  
