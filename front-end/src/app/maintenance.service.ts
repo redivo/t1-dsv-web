@@ -113,7 +113,9 @@ export class MaintenanceService {
    * \brief  Constructor
    */
   constructor() {
-    this.vehiclesList = this.vehicleService.getAllVehicles();
+    this.vehicleService.getAllVehicles().then((vehicleInfoList: VehicleInfo[]) => {
+      this.vehiclesList = vehicleInfoList;
+    });
 
     // Calculate next revisions of each vehicle
     // TODO - Get it from back end when integration with back end is done

@@ -7,6 +7,7 @@ const {createVehicles, getVehicles, UpdateVehicle} = require ('../controllers/ve
 
  //GET
 router.get('/', async (req, res) => {
+    console.log("opa");
     try {
 
         const vehicles = await getVehicles (req.query?.placa)

@@ -30,6 +30,8 @@ export class VehiclesListComponent {
    * \brief  Constructor
    */
   constructor() {
-    this.vehiclesList = this.vehicleService.getAllVehicles();
+    this.vehicleService.getAllVehicles().then((vehicleInfoList: VehicleInfo[]) => {
+      this.vehiclesList = vehicleInfoList;
+    });
   }
 }

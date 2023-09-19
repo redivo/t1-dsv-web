@@ -12,6 +12,8 @@ import { VehicleInfo } from './vehicleinfo';
  * \brief  Service class of vehicle service
  */
 export class VehicleService {
+  backEndUrl = 'http://localhost:3000/';
+
   // TODO - This must be removed when integration with back end is done
   vehiclesList: VehicleInfo[] = [
     {
@@ -57,9 +59,11 @@ export class VehicleService {
    * \brief  Retrieve all vehicles
    * \return  List containing all vehicles
    */
-  getAllVehicles(): VehicleInfo[] {
-    // TODO - Get it from back end when integration with back end is done
-    return this.vehiclesList;
+  async getAllVehicles(): Promise<VehicleInfo[]> {
+  //getAllVehicles(): VehicleInfo[] {
+
+     const data = await fetch(this.backEndUrl + 'veiculos');
+     return await data.json() ?? [];
   }
 
   /************************************************************************************************/
