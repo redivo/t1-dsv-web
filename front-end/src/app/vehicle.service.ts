@@ -60,10 +60,12 @@ export class VehicleService {
    * \return  List containing all vehicles
    */
   async getAllVehicles(): Promise<VehicleInfo[]> {
-  //getAllVehicles(): VehicleInfo[] {
 
-     const data = await fetch(this.backEndUrl + 'veiculos');
-     return await data.json() ?? [];
+    const data = await fetch(this.backEndUrl + 'veiculos');
+
+    console.log(data.json());
+
+    return await data.json() ?? [];
   }
 
   /************************************************************************************************/
