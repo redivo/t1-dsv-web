@@ -32,8 +32,12 @@ export class NextMaintenancesListComponent {
   /**
    * \brief  Constructor
    */
+  
   constructor() {
-    this.maintenancesList = this.maintenanceService.getAllMaintenances();
+    this.maintenanceService.getAllMaintenances().then((maintenses: MaintenanceInfo[])=>{
+      this.maintenancesList = maintenses;
+    })
+
     this.nextMaintenances = this.maintenanceService.getNextMaintenances();
   }
 }

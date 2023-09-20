@@ -12,6 +12,10 @@ import { VehicleInfo } from './vehicleinfo';
  * \brief  Service class of vehicle service
  */
 export class VehicleService {
+
+  //API
+  url='http://localhost:3000';
+
   // TODO - This must be removed when integration with back end is done
   vehiclesList: VehicleInfo[] = [
     {
@@ -57,9 +61,14 @@ export class VehicleService {
    * \brief  Retrieve all vehicles
    * \return  List containing all vehicles
    */
-  getAllVehicles(): VehicleInfo[] {
-    // TODO - Get it from back end when integration with back end is done
-    return this.vehiclesList;
+
+  
+
+  async getAllVehicles(): Promise<VehicleInfo[]>{
+    const res = await fetch(this.url+'/veiculos');
+    const data = await res.json();
+    console.log(data);
+    return  data.json;
   }
 
   /************************************************************************************************/
@@ -68,10 +77,11 @@ export class VehicleService {
    * \param  String containing license plate of the vehicle
    * \return  VehicleInfo is it was found, undefined otherwise
    */
-  getVehicle(licensePlate: string): VehicleInfo | undefined {
-    // TODO - Get it from back end when integration with back end is done
-    return this.vehiclesList.find(vehicle =>
-                                  vehicle.licensePlate.toLowerCase() === licensePlate.toLowerCase());
+  async getVehicle(licensePlate: string): Promise<VehicleInfo | undefined> {
+    const res = await fetch(this.url+'/'+licensePlate);
+    const data = await res.json();
+    console.log(data);
+    return await data.json;
   }
 
   /************************************************************************************************/
@@ -79,9 +89,20 @@ export class VehicleService {
    * \brief  Add a new vehicle
    * \param  vehicle  Vehicle to me added
    */
-  addVehicle(vehicle: VehicleInfo) {
-    // TODO - Send it to back end when integration with back end is done
-    this.vehiclesList.push(vehicle);
+  async addVehicle(vehicle: VehicleInfo){
+    try{
+      const res = await fetch(this.url+'/veiculos', {
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'no-cors',
+        body: JSON.stringify(vehicle)
+      });
+    }catch(error){
+      console.log(error);
+    }
+    
   }
 
   /************************************************************************************************/
@@ -89,7 +110,13 @@ export class VehicleService {
    * \brief  Edit an existing value
    * \param  vehicle  Vehicle info to be edited
    */
-  editVehicle(vehicle: VehicleInfo) {
-    // TODO - Send it to back end when integration with back end is done
+  async editVehicle(vehicle: VehicleInfo) {
+    const res = await fetch('http://localhost:3000/veiculos/'+vehicle.licensePlate,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      mode: 'no-cors',
+      body: JSON.stringify(vehicle)
+    });
+    const data = await res.json();
   }
 }
