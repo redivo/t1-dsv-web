@@ -21,6 +21,8 @@ export class MaintenanceService {
   nextMaintenances: NextMaintenanceInfo[] = [];
 
   // TODO - This must be removed when integration with back end is done
+
+  url = 'http://localhost:3000';
   maintenancesList: MaintenanceInfo[] = [
     {
       id: 0,
@@ -47,9 +49,11 @@ export class MaintenanceService {
    * \brief  Retrieve all stored maintenances
    * \return  List containing all maintenances
    */
-  getAllMaintenances(): MaintenanceInfo[] {
-    // TODO - Get it from back end when integration with back end is done
-    return this.maintenancesList;
+  async getAllMaintenances(): Promise<MaintenanceInfo[]> {
+    const res = await fetch(this.url+'/manutencao');
+    const data = await res.json();
+    console.log(data);
+    return  data.json;
   }
 
   /************************************************************************************************/
@@ -113,7 +117,9 @@ export class MaintenanceService {
    * \brief  Constructor
    */
   constructor() {
-    this.vehiclesList = this.vehicleService.getAllVehicles();
+    this.vehicleService.getAllVehicles().then((vehicleTeste: VehicleInfo[])=>{
+      this.vehiclesList = vehicleTeste;
+    });
 
     // Calculate next revisions of each vehicle
     // TODO - Get it from back end when integration with back end is done

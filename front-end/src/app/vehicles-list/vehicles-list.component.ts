@@ -29,7 +29,13 @@ export class VehiclesListComponent {
   /**
    * \brief  Constructor
    */
-  constructor() {
-    this.vehiclesList = this.vehicleService.getAllVehicles();
+  constructor()  {
+    this.vehicleService.getAllVehicles().then((vehicleTeste: VehicleInfo[])=>{
+      this.vehiclesList = vehicleTeste;
+    });
+    
   }
+
+    
+  
 }

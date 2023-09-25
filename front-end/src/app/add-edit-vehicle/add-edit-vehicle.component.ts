@@ -77,8 +77,8 @@ export class AddEditVehicleComponent {
     if (String(this.route.snapshot.url).includes('editVehicle')) {
       this.title = 'Edit vehicle';
       this.button = "Edit";
-      let vehicle:VehicleInfo|undefined
-          = this.vehicleService.getVehicle(String(this.route.snapshot.params['licensePlate']));
+      let vehicle: VehicleInfo| undefined
+         this.vehicleService.getVehicle(this.route.snapshot.params['licensePlate']);
       if (vehicle) {
         this.initNameVal = vehicle.name;
         this.initLicensePlateVal = vehicle.licensePlate;
