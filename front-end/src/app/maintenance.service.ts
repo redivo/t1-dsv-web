@@ -50,7 +50,14 @@ export class MaintenanceService {
    * \return  List containing all maintenances
    */
   async getAllMaintenances(): Promise<MaintenanceInfo[]> {
-    const res = await fetch(this.url+'/manutencao');
+    const res = await fetch(this.url+'/revisao',{
+      method:'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      mode: 'no-cors',
+
+    });
     const data = await res.json();
     console.log(data);
     return  data.json;

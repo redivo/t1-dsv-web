@@ -16,45 +16,7 @@ export class VehicleService {
   //API
   url='http://localhost:3000';
 
-  // TODO - This must be removed when integration with back end is done
-  vehiclesList: VehicleInfo[] = [
-    {
-      licensePlate: 'abc-1d23',
-      name: 'Short distances',
-      brand: 'Fiat',
-      model: 'Fiorino',
-      year: 2020,
-      odometer: 12345,
-      category: 'Delivery',
-    },
-    {
-      licensePlate: 'efg-4h56',
-      name: 'Long distances',
-      brand: 'JAC',
-      model: 'E-JT9,5',
-      year: 2022,
-      odometer: 5387,
-      category: 'Delivery',
-    },
-    {
-      licensePlate: 'ijk-7890',
-      name: 'Cattle truck',
-      brand: 'Mercedes Bens',
-      model: 'MB 915',
-      year: 2006,
-      odometer: 123456,
-      category: 'Animal truck',
-    },
-    {
-      licensePlate: 'lmn-1234',
-      name: 'Office car',
-      brand: 'Volkswagen',
-      model: 'Saveiro',
-      year: 2010,
-      odometer: 82456,
-      category: 'Auxiliary',
-    }
-  ];
+  
 
   /************************************************************************************************/
   /**
@@ -65,7 +27,10 @@ export class VehicleService {
   
 
   async getAllVehicles(): Promise<VehicleInfo[]>{
-    const res = await fetch(this.url+'/veiculos');
+    const res = await fetch(this.url+'/veiculos',{
+      mode: 'no-cors',
+      headers: {'Access-Control-Allow-Origin':'*'}
+    });
     const data = await res.json();
     console.log(data);
     return  data.json;
@@ -78,7 +43,10 @@ export class VehicleService {
    * \return  VehicleInfo is it was found, undefined otherwise
    */
   async getVehicle(licensePlate: string): Promise<VehicleInfo | undefined> {
-    const res = await fetch(this.url+'/'+licensePlate);
+    const res = await fetch(this.url+'/'+licensePlate,{
+      mode: 'no-cors',
+      headers: {'Access-Control-Allow-Origin':'*'}
+    });
     const data = await res.json();
     console.log(data);
     return await data.json;
@@ -95,6 +63,7 @@ export class VehicleService {
         method:'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin':'*'
         },
         mode: 'no-cors',
         body: JSON.stringify(vehicle)
@@ -113,7 +82,9 @@ export class VehicleService {
   async editVehicle(vehicle: VehicleInfo) {
     const res = await fetch('http://localhost:3000/veiculos/'+vehicle.licensePlate,{
       method:'PUT',
-      headers:{'Content-Type':'application/json'},
+      headers:{
+        'Content-Type':'application/json',
+        'Access-Control-Allow-Origin':'*'},
       mode: 'no-cors',
       body: JSON.stringify(vehicle)
     });
