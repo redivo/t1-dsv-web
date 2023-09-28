@@ -8,13 +8,28 @@ const {createVehicles, getVehicles, UpdateVehicle} = require ('../controllers/ve
 
 /**************************************************************************************************/
 /**
- * \brief  GET method
+ * \brief  GET method for a specific vehicle
+ * \param  req  Request data
+ * \param  res  Response data
+ */
+router.get('/:licensePlate', async (req, res) => {
+    try {
+      const vehicles = await getVehicles(req.params?.licensePlate);
+      res.status(200).json(vehicles[0]);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+})
+
+/**************************************************************************************************/
+/**
+ * \brief  GET method for all vehicles
  * \param  req  Request data
  * \param  res  Response data
  */
 router.get('/', async (req, res) => {
     try {
-      const vehicles = await getVehicles(req.query?.placa);
+      const vehicles = await getVehicles();
       res.status(200).json(vehicles);
     } catch (error) {
       res.status(500).json({ error: error.message });
