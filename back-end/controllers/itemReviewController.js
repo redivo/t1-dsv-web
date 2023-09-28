@@ -1,133 +1,79 @@
 const {dbConfig} = require('../configs/DBConfig')
 const sql = require('mssql');
 
+/**************************************************************************************************/
+/**
+ * \brief  Get review items
+ * \param  licensePlate  License Plate related do reviews. If not given, return all
+ * \return The got reviews
+ */
+const getItemReview =  async (licensePlate) =>
+{
+  try {
+    // Connect to DB
+    const pool = await sql.connect(dbConfig);
+    const request = pool.request();
 
+    // Initialize query
+    let selectItenReview = 'SELECT I.* FROM ItensRevisao I';
 
-const getItemReview =  async (placa) => {
-    try {
+    // If license plate was given, select it
+    if (licensePlate) {
+      console.log('Placa:', licensePlate); // Verifique o valor de placa
+      selectItenReview += ' LEFT JOIN Veiculos v ON (V.VeiculoID=I.VeiculoID) WHERE V.placa = @licensePlate';
+      request.input('licensePlate', sql.VarChar, licensePlate );
+      console.log('SQL:', selectItenReview); // Verifique o SQL gerado
 
-      const pool = await sql.connect(dbConfig);
-      const request = pool.request();
-
-      let selectItenReview = 'SELECT I.* FROM ItensRevisao I';
-
-      if (placa) {
-        console.log('Placa:', placa); // Verifique o valor de placa
-        selectItenReview += ' LEFT JOIN Veiculos v ON (V.VeiculoID=I.VeiculoID) WHERE V.placa = @placa';
-        request.input('placa', sql.VarChar, placa );
-        console.log('SQL:', selectItenReview); // Verifique o SQL gerado
-
-      }
-
-      const result = await request.query(selectItenReview);
-      return result.recordset;
-    } catch (error) {
-        throw error.message ;
     }
-  };
-  
 
- 
+    // Perform request
+    const result = await request.query(selectItenReview);
 
+    // Return result
+    return result.recordset;
+  } catch (error) {
+    throw error.message ;
+  }
+};
 
-  const createItemReview =  async (itemReview, placa) => {
+/**************************************************************************************************/
+/**
+ * \brief  Create an review item done
+ * \param  itemReview    Review data
+ * \param  licensePlate  License Plate related do vehicle
+ * \return TRUE if OK, FALSE otherwise
+ */
+const createItemReview =  async (itemReview, licensePlate) => {
+  // Get data from input
+  const {Descricao, DataRevisao, Valor, VeiculoID } = itemReview;
 
-      const {Descricao, DataRevisao, Valor, VeiculoID } = itemReview;
+  try {
+    // Connect to DB
+    const pool = await sql.connect(dbConfig);
 
-      try {
-        const pool = await sql.connect(dbConfig);
-        const query = `
-        DECLARE @ID INT = (SELECT VeiculoID FROM Veiculos WHERE placa = @placa )
-        INSERT INTO ItensRevisao (Descricao, DataRevisao, Valor, VeiculoID)
-        VALUES (@Descricao, @DataRevisao, @Valor, @ID)
-        `;
-        
-        console.log('placaaa',placa)
-        
-        await pool.request()
-          .input('placa', sql.VarChar, placa)
-          .input('Descricao', sql.VarChar, Descricao)
-          .input('DataRevisao', sql.Date, DataRevisao)
-          .input('Valor', sql.Int, Valor)
-          .query(query);
-    
-        return { message: 'Item de Revisão cadastrado com sucesso!' };
+    // Mount query
+    const query = `
+    DECLARE @ID INT = (SELECT VeiculoID FROM Veiculos WHERE placa = @licensePlate )
+    INSERT INTO ItensRevisao (Descricao, DataRevisao, Valor, VeiculoID)
+    VALUES (@Descricao, @DataRevisao, @Valor, @ID)
+    `;
 
-      } catch (error) {
-        throw error.message ;
-      }
-    };
-  
+    // Execute query
+    await pool.request()
+      .input('licensePlate', sql.VarChar, licensePlate)
+      .input('Descricao', sql.VarChar, Descricao)
+      .input('DataRevisao', sql.Date, DataRevisao)
+      .input('Valor', sql.Int, Valor)
+      .query(query);
 
+    // Return true
+    return true;
+  } catch (error) {
+    throw error.message ;
+  }
+};
 
-
-
-  //   const UpdateVehicle = async (placa, updateFields) => {
-  //     try {
-  //       const pool = await sql.connect(dbConfig);
-
-  //       if (Object.keys(updateFields).length === 0) {
-  //         throw new Error('Nenhum campo de atualização fornecido.');
-  //       }
-    
-  //       let query = 'UPDATE Veiculos SET ';
-  //       const params = [];
-    
-  //       for (const [field, value] of Object.entries(updateFields)) {
-  //         // Determine o tipo correto com base no nome do campo
-          
-  //        // const fieldType = field === 'Ano' ? sql.Int : sql.VarChar;
-  //         const fieldType = (field === 'Ano') ? sql.Int : (field === 'status') ? sql.Bit : sql.VarChar;
-          
-  //         query += `${field} = @${field}, `;
-  //         params.push({ name: field, type: fieldType, value });
-  //       }
-    
-  //       query = query.slice(0, -2); // Remover a última vírgula e espaço
-  //       query += ' WHERE Placa = @placa';
-    
-  //       console.log('query com where:', query);
-    
-  //       // Executar a consulta SQL
-  //       const request = pool.request();
-  //       request.input('placa', sql.VarChar, placa);
-    
-  //       for (const param of params) {
-  //         request.input(param.name, param.type, param.value);
-  //       }
-    
-  //       const result = await request.query(query);
-    
-  //       if (result.rowsAffected[0] === 0) {
-  //         throw new Error('Veículo não encontrado.');
-  //       }
-    
-  //       return { message: 'Dados do veículo atualizados com sucesso.' };
-  //     } catch (error) {
-  //       throw error.message;
-  //     }
-  //   };
-
-
-
-
-
-
-  
-    module.exports = {getItemReview, createItemReview}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/**************************************************************************************************/
+/* Export modules                                                                                 */
+/**************************************************************************************************/
+module.exports = {getItemReview, createItemReview}
