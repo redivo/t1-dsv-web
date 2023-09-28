@@ -14,26 +14,24 @@ import { VehicleInfo } from './vehicleinfo';
 export class VehicleService {
 
   //API
-  url='http://localhost:3000';
-
-  
+  url = 'http://localhost:3000';
 
   /************************************************************************************************/
   /**
    * \brief  Retrieve all vehicles
    * \return  List containing all vehicles
    */
-
-  
-
   async getAllVehicles(): Promise<VehicleInfo[]>{
-    const res = await fetch(this.url+'/veiculos',{
-      mode: 'no-cors',
-      headers: {'Access-Control-Allow-Origin':'*'}
+
+    const response = await fetch(this.url+'/veiculos',{
+      headers: {
+        "Content-Type": "application/json",
+      }
     });
-    const data = await res.json();
-    console.log(data);
-    return  data.json;
+
+    const data = await response;
+
+    return data.json();
   }
 
   /************************************************************************************************/
@@ -43,12 +41,9 @@ export class VehicleService {
    * \return  VehicleInfo is it was found, undefined otherwise
    */
   async getVehicle(licensePlate: string): Promise<VehicleInfo | undefined> {
-    const res = await fetch(this.url+'/'+licensePlate,{
-      mode: 'no-cors',
-      headers: {'Access-Control-Allow-Origin':'*'}
-    });
+    const res = await fetch(this.url + '/' + licensePlate);
     const data = await res.json();
-    console.log(data);
+    console.log(res);
     return await data.json;
   }
 
@@ -63,15 +58,12 @@ export class VehicleService {
         method:'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin':'*'
         },
-        mode: 'no-cors',
         body: JSON.stringify(vehicle)
       });
     }catch(error){
       console.log(error);
     }
-    
   }
 
   /************************************************************************************************/
@@ -84,8 +76,7 @@ export class VehicleService {
       method:'PUT',
       headers:{
         'Content-Type':'application/json',
-        'Access-Control-Allow-Origin':'*'},
-      mode: 'no-cors',
+      },
       body: JSON.stringify(vehicle)
     });
     const data = await res.json();

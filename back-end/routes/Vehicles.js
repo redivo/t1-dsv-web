@@ -2,57 +2,68 @@ const app = require('express');
 const router = app.Router();
 const {createVehicles, getVehicles, UpdateVehicle} = require ('../controllers/veihclesController')
 
+/**************************************************************************************************/
+/* Available Routes                                                                               */
+/**************************************************************************************************/
 
-//######## ROTAS DISPONÍVEIS
-
- //GET
+/**************************************************************************************************/
+/**
+ * \brief  GET method
+ * \param  req  Request data
+ * \param  res  Response data
+ */
 router.get('/', async (req, res) => {
     try {
-
-        const vehicles = await getVehicles (req.query?.placa)
-
-      res.json(vehicles);
+      const vehicles = await getVehicles(req.query?.placa);
+      res.status(200).json(vehicles);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
 })
 
-
- //POST
+/**************************************************************************************************/
+/**
+ * \brief  POST method
+ * \param  req  Request data
+ * \param  res  Response data
+ */
 router.post('/', async (req, res) => {
   try {
-
-      const status = await createVehicles (req.body)
-    res.json(status);
+    const ok = await createVehicles (req.body)
+    if (ok) {
+        res.status(200);
+    } else {
+        res.status(500).json({ error: "Error creating vehicle" });
+    }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 })
 
-
- //PUT
+/**************************************************************************************************/
+/**
+ * \brief  PUT method
+ * \param  req  Request data
+ * \param  res  Response data
+ */
 router.put('/', async (req, res) => {
   const placa = req.query.placa;
   const updateFields = req.body;
 
   try {
-    const result = await UpdateVehicle(placa, updateFields);
+    const ok = await UpdateVehicle(placa, updateFields);
+    if (ok) {
+        res.status(200);
+    } else {
+        res.status(500).json({ error: "Error updating vehicle" });
+    }
     res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-
-
-
-
-
+/**************************************************************************************************/
+/* Export modules                                                                                 */
+/**************************************************************************************************/
 module.exports = {router};
-
-
-
-
-  
-  
-  
