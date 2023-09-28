@@ -21,7 +21,8 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 /**
  * \brief  Component class to vehicles list
  */
-export class VehiclesListComponent {
+export class VehiclesListComponent
+{
   vehiclesList: VehicleInfo[] = [];
   vehicleService: VehicleService = inject(VehicleService);
 
@@ -30,12 +31,26 @@ export class VehiclesListComponent {
    * \brief  Constructor
    */
   constructor()  {
-    this.vehicleService.getAllVehicles().then((vehicleTeste: VehicleInfo[])=>{
-      this.vehiclesList = vehicleTeste;
-    });
-    
-  }
+    this.vehicleService.getAllVehicles().then((vehiclesList: VehicleInfo[])=>{
+      // Clear
+      this.vehiclesList = [];
 
-    
-  
+      // Iterate over received vehicles and not use vehicles that are not completely filled
+      for (let i = 0; i < vehiclesList.length; i++) {
+        if (!vehiclesList[i]["brand"]
+            || !vehiclesList[i]["category"]
+            || !vehiclesList[i]["licensePlate"]
+            || !vehiclesList[i]["model"]
+            || !vehiclesList[i]["name"]
+            || !vehiclesList[i]["odometer"]
+            || !vehiclesList[i]["year"]) {
+          // Skip
+          continue;
+        }
+
+        // If it is completely filled, add
+        this.vehiclesList.push(vehiclesList[i]);
+      }
+    });
+  }
 }
