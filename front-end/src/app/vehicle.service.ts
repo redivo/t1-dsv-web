@@ -13,7 +13,7 @@ import { VehicleInfo } from './vehicleinfo';
  */
 export class VehicleService {
 
-  //API
+  // API
   url = 'http://localhost:3000';
 
   /************************************************************************************************/
@@ -22,16 +22,9 @@ export class VehicleService {
    * \return  List containing all vehicles
    */
   async getAllVehicles(): Promise<VehicleInfo[]>{
-
-    const response = await fetch(this.url+'/veiculos',{
-      headers: {
-        "Content-Type": "application/json",
-      }
-    });
-
-    const data = await response;
-
-    return data.json();
+    const response = await fetch(this.url + '/veiculos');
+    const data = await response.json();
+    return data;
   }
 
   /************************************************************************************************/
@@ -41,10 +34,9 @@ export class VehicleService {
    * \return  VehicleInfo is it was found, undefined otherwise
    */
   async getVehicle(licensePlate: string): Promise<VehicleInfo | undefined> {
-    const res = await fetch(this.url + '/' + licensePlate);
-    const data = await res.json();
-    console.log(res);
-    return await data.json;
+    const response = await fetch(this.url + '/veiculos/' + licensePlate);
+    const data = await response.json();
+    return data;
   }
 
   /************************************************************************************************/
@@ -54,7 +46,7 @@ export class VehicleService {
    */
   async addVehicle(vehicle: VehicleInfo){
     try{
-      const res = await fetch(this.url+'/veiculos', {
+      const res = await fetch(this.url + '/veiculos', {
         method:'POST',
         headers: {
           'Content-Type': 'application/json',

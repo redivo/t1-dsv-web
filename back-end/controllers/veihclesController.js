@@ -3,49 +3,6 @@ const sql = require('mssql');
 
 /**************************************************************************************************/
 /**
- * \brief  Convert vehicles dictionary from PT labels to EN labels
- * \param  vehicles  JSON containing vehicles to be translated
- */
-function convertVehiclesDictionary(vehicles)
-{
-  // Iterate over vehicles
-  for (let i = 0; i < vehicles.length; i++) {
-    // VeiculoID -> id
-    vehicles[i]['id'] = vehicles[i]['VeiculoID'];
-    delete vehicles[i]['VeiculoID'];
-
-    // Nome -> name
-    vehicles[i]['name'] = vehicles[i]['Nome'];
-    delete vehicles[i]['Nome'];
-
-    // Placa -> licensePlate
-    vehicles[i]['licensePlate'] = vehicles[i]['Placa'];
-    delete vehicles[i]['Placa'];
-
-    // Modelo -> model
-    vehicles[i]['model'] = vehicles[i]['Modelo'];
-    delete vehicles[i]['Modelo'];
-
-    // Marca -> brand
-    vehicles[i]['brand'] = vehicles[i]['Marca'];
-    delete vehicles[i]['Marca'];
-
-    // Ano -> year
-    vehicles[i]['year'] = vehicles[i]['Ano'];
-    delete vehicles[i]['Ano'];
-
-    // Categoria -> category
-    vehicles[i]['category'] = vehicles[i]['Categoria'];
-    delete vehicles[i]['Categoria'];
-
-    // KM -> odometer
-    vehicles[i]['odometer'] = vehicles[i]['KM'];
-    delete vehicles[i]['KM'];
-  }
-}
-
-/**************************************************************************************************/
-/**
  * \brief  Get vehicle(s) from DB
  * \param  licensePlate  License Plate related do vehicle to be get. If not given, return all
  * \return The requested vehicle if licensePlate is given, all vehicles if not
@@ -58,24 +15,21 @@ const getVehicles =  async (licensePlate) =>
     const request = pool.request();
 
     // Create basic request
-    let selectVehicles = 'SELECT * FROM Veiculos ';
+    let selectVehicles = 'SELECT * FROM vehicles ';
 
     // Select only license plate if it was given
     if (licensePlate) {
-      selectVehicles += ' WHERE Status = 1 AND Placa = @licensePlate';
+      selectVehicles += ' WHERE Status = 1 AND licensePlate = @licensePlate';
       request.input('licensePlate', sql.VarChar, licensePlate );
     }
 
     // Get result
     const result = await request.query(selectVehicles);
 
-    // Convert vehicles dictionary from PT to EN
-    convertVehiclesDictionary(result.recordset);
-
     // Return value
     return result.recordset;
   } catch (error) {
-      throw error.message ;
+    throw error.message ;
   }
 };
 
@@ -96,19 +50,19 @@ const createVehicles =  async (vehicle) =>
 
     // Mount query
     const query = `
-      INSERT INTO Veiculos (Nome, Placa, Modelo, Marca, Ano, KM, Categoria)
-      VALUES (@name, @licensePlate, @model, @brand, @year, @KM, @category)
+      INSERT INTO vehicles (name, licensePlate, model, brand, year, odometer, category)
+      VALUES (@name, @licensePlate, @model, @brand, @year, @odometer, @category)
     `;
 
     // Perform operation
     await pool.request()
-      .input('Nome', sql.VarChar, Nome)
-      .input('Placa', sql.VarChar, Placa)
-      .input('Modelo', sql.VarChar, Modelo)
-      .input('Marca', sql.VarChar, Marca)
-      .input('Ano', sql.Int, Ano)
-      .input('KM', sql.Int, KM)
-      .input('Categoria', sql.VarChar, Categoria)
+      .input('name', sql.VarChar, name)
+      .input('licensePlate', sql.VarChar, licensePlate)
+      .input('model', sql.VarChar, model)
+      .input('brand', sql.VarChar, brand)
+      .input('year', sql.Int, year)
+      .input('odometer', sql.Int, odometer)
+      .input('category', sql.VarChar, category)
       .query(query);
 
     // Return TRUE
@@ -137,12 +91,12 @@ const UpdateVehicle = async (licensePlate, updateFields) => {
     }
 
     // Mount initial query
-    let query = 'UPDATE Veiculos SET ';
+    let query = 'UPDATE vehicles SET ';
     const params = [];
 
     // Iterate over fields filling query
     for (const [field, value] of Object.entries(updateFields)) {
-      const fieldType = (field === 'Ano') ? sql.Int : (field === 'KM') ?
+      const fieldType = (field === 'year') ? sql.Int : (field === 'odometer') ?
           sql.Int
         :
           (field === 'status') ? sql.Bit : sql.VarChar;
@@ -155,7 +109,7 @@ const UpdateVehicle = async (licensePlate, updateFields) => {
     query = query.slice(0, -2);
 
     // Filter by licensePlate
-    query += ' WHERE Placa = @licensePlate';
+    query += ' WHERE licenseplate = @licenseplate';
 
     // Run query
     const request = pool.request();

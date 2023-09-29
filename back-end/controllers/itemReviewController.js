@@ -15,15 +15,12 @@ const getItemReview =  async (licensePlate) =>
     const request = pool.request();
 
     // Initialize query
-    let selectItenReview = 'SELECT I.* FROM ItensRevisao I';
+    let selectItenReview = 'SELECT * FROM maintenances ';
 
     // If license plate was given, select it
     if (licensePlate) {
-      console.log('Placa:', licensePlate); // Verifique o valor de placa
-      selectItenReview += ' LEFT JOIN Veiculos v ON (V.VeiculoID=I.VeiculoID) WHERE V.placa = @licensePlate';
+      selectItenReview += ' WHERE licensePlate = @licensePlate';
       request.input('licensePlate', sql.VarChar, licensePlate );
-      console.log('SQL:', selectItenReview); // Verifique o SQL gerado
-
     }
 
     // Perform request
@@ -45,7 +42,7 @@ const getItemReview =  async (licensePlate) =>
  */
 const createItemReview =  async (itemReview, licensePlate) => {
   // Get data from input
-  const {Descricao, DataRevisao, Valor, VeiculoID } = itemReview;
+  const {description, date, value } = itemReview;
 
   try {
     // Connect to DB
@@ -53,17 +50,17 @@ const createItemReview =  async (itemReview, licensePlate) => {
 
     // Mount query
     const query = `
-    DECLARE @ID INT = (SELECT VeiculoID FROM Veiculos WHERE placa = @licensePlate )
-    INSERT INTO ItensRevisao (Descricao, DataRevisao, Valor, VeiculoID)
-    VALUES (@Descricao, @DataRevisao, @Valor, @ID)
+    DECLARE @ID INT = (SELECT licensePlate FROM vehicles WHERE placa = @licensePlate )
+    INSERT INTO maintenances (description, date, value, licensePlate)
+    VALUES (@description, @date, @value, @ID)
     `;
 
     // Execute query
     await pool.request()
       .input('licensePlate', sql.VarChar, licensePlate)
-      .input('Descricao', sql.VarChar, Descricao)
-      .input('DataRevisao', sql.Date, DataRevisao)
-      .input('Valor', sql.Int, Valor)
+      .input('description', sql.VarChar, description)
+      .input('date', sql.Date, date)
+      .input('value', sql.Int, value)
       .query(query);
 
     // Return true

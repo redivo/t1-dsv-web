@@ -38,8 +38,16 @@ export class VehicleDetailsComponent {
    */
   constructor() {
     const licensePlate = String(this.route.snapshot.params['licensePlate']);
-    this.vehicleService.getVehicle(licensePlate);
-    this.nextMaintenance = this.maintenanceService.getNextMaintenance(licensePlate);
+
+    // Get vehicle info
+    this.vehicleService.getVehicle(licensePlate).then(vehicleInfo => {
+      this.vehicleInfo = vehicleInfo;
+    });
+
+    // The next maintenance
+    this.maintenanceService.getNextMaintenance(licensePlate).then((nextMaintenance) => {
+      this.nextMaintenance = nextMaintenance;
+    });
   }
 
   /************************************************************************************************/

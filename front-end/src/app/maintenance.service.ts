@@ -20,29 +20,9 @@ export class MaintenanceService {
   vehiclesList: VehicleInfo[] = [];
   nextMaintenances: NextMaintenanceInfo[] = [];
 
-  // TODO - This must be removed when integration with back end is done
-
+  // API
   url = 'http://localhost:3000';
-  maintenancesList: MaintenanceInfo[] = [
-    {
-      id: 0,
-      licensePlate: 'ABC-1D23',
-      description: 'Breaks',
-      date: new Date("2023-02-03"),
-      value: 123.45,
-      readOdometer: 10349,
-      referenceOdometer: 10000,
-    },
-    {
-      id: 1,
-      licensePlate: 'IJK-7890',
-      description: 'Engine',
-      date: new Date("2023-05-20"),
-      value: 300.00,
-      readOdometer: 100000,
-      referenceOdometer: 104053,
-    },
-  ];
+  maintenancesList: MaintenanceInfo[] = [];
 
   /************************************************************************************************/
   /**
@@ -50,17 +30,15 @@ export class MaintenanceService {
    * \return  List containing all maintenances
    */
   async getAllMaintenances(): Promise<MaintenanceInfo[]> {
-    const res = await fetch(this.url+'/revisao',{
-      method:'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      mode: 'no-cors',
+    const response = await fetch(this.url+'/maintenances');
+    const data = await response.json();
 
-    });
-    const data = await res.json();
-    console.log(data);
-    return  data.json;
+    // Iterate over received data and convert string data do Date object
+    for (let i = 0; i < data.length; i++) {
+      data[i]['date'] = new Date(data[i]['date']);
+    }
+
+    return data;
   }
 
   /************************************************************************************************/
@@ -74,7 +52,6 @@ export class MaintenanceService {
         * MaintenanceService.maintenanceStep;
 
     // If the maintenance was already done, get the next
-    // TODO - Get it from back end when integration with back end is done
     if (this.maintenancesList.find(maintenance =>
                                    (maintenance.licensePlate.toLowerCase()
                                         === vehicle.licensePlate.toLowerCase()
@@ -90,8 +67,25 @@ export class MaintenanceService {
    * \brief  Retrieve next maintenances for all vehicles
    * \return  List containing next maintenances
    */
-  getNextMaintenances(): NextMaintenanceInfo[] {
-    // TODO - Get it from back end when integration with back end is done
+  async getNextMaintenances(): Promise<NextMaintenanceInfo[]> {
+    // First, get all vehicles and maintenances
+    this.vehiclesList =  await this.vehicleService.getAllVehicles();
+    this.maintenancesList = await this.getAllMaintenances();
+
+    // And clear old maintenances
+    this.nextMaintenances = [];
+
+    // Then next revisions of each vehicle
+    this.vehiclesList.forEach(vehicle => {
+      let nextMaintenanceOdometer = this.getNextMaintenanceOdometer(vehicle);
+      this.nextMaintenances.push({
+        licensePlate: vehicle.licensePlate,
+        refOdometer: nextMaintenanceOdometer,
+        readOdometer: vehicle.odometer,
+        delayed: (vehicle.odometer > nextMaintenanceOdometer)
+      });
+    });
+
     return this.nextMaintenances;
   }
 
@@ -100,8 +94,8 @@ export class MaintenanceService {
    * \brief   Retrieve next maintenance of a specific vehicle
    * \return  Next maintenances
    */
-  getNextMaintenance(licensePlate: string): NextMaintenanceInfo | undefined {
-    // TODO - Get it from back end when integration with back end is done
+  async getNextMaintenance(licensePlate: string): Promise<NextMaintenanceInfo | undefined> {
+    await this.getNextMaintenances();
     return this.nextMaintenances.find(maintenance =>
                                       (maintenance.licensePlate.toLowerCase()
                                         === licensePlate.toLowerCase()));
@@ -117,27 +111,5 @@ export class MaintenanceService {
 
     // TODO - Call back end when the integration is done
     this.maintenancesList.push(maintenance);
-  }
-
-  /************************************************************************************************/
-  /**
-   * \brief  Constructor
-   */
-  constructor() {
-    this.vehicleService.getAllVehicles().then((vehicleTeste: VehicleInfo[])=>{
-      this.vehiclesList = vehicleTeste;
-    });
-
-    // Calculate next revisions of each vehicle
-    // TODO - Get it from back end when integration with back end is done
-    this.vehiclesList.forEach(vehicle => {
-      let nextMaintenanceOdometer = this.getNextMaintenanceOdometer(vehicle);
-      this.nextMaintenances.push({
-        licensePlate: vehicle.licensePlate,
-        refOdometer: nextMaintenanceOdometer,
-        readOdometer: vehicle.odometer,
-        delayed: (vehicle.odometer > nextMaintenanceOdometer)
-      });
-    });
   }
 }
