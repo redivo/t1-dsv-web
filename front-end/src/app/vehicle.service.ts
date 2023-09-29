@@ -22,7 +22,7 @@ export class VehicleService {
    * \return  List containing all vehicles
    */
   async getAllVehicles(): Promise<VehicleInfo[]>{
-    const response = await fetch(this.url + '/veiculos');
+    const response = await fetch(this.url + '/vehicles');
     const data = await response.json();
     return data;
   }
@@ -34,7 +34,7 @@ export class VehicleService {
    * \return  VehicleInfo is it was found, undefined otherwise
    */
   async getVehicle(licensePlate: string): Promise<VehicleInfo | undefined> {
-    const response = await fetch(this.url + '/veiculos/' + licensePlate);
+    const response = await fetch(this.url + '/vehicles/' + licensePlate);
     const data = await response.json();
     return data;
   }
@@ -46,7 +46,7 @@ export class VehicleService {
    */
   async addVehicle(vehicle: VehicleInfo){
     try{
-      const res = await fetch(this.url + '/veiculos', {
+      const res = await fetch(this.url + '/vehicles', {
         method:'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,7 +64,7 @@ export class VehicleService {
    * \param  vehicle  Vehicle info to be edited
    */
   async editVehicle(vehicle: VehicleInfo) {
-    const res = await fetch(this.url + '/veiculos/', {
+    const res = await fetch(this.url + '/vehicles/', {
       method:'PUT',
       headers:{
         'Content-Type':'application/json',

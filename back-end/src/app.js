@@ -56,7 +56,7 @@ passport.deserializeUser((obj, done) => done(null, obj));
 
 // Get vehicles route
 const vehicles = require('../routes/Vehicles');
-app.use('/veiculos', vehicles.router);
+app.use('/vehicles', vehicles.router);
 
 // Get review items route
 const itemReview = require('../routes/ItemReview');
