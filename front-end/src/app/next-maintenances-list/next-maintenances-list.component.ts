@@ -24,7 +24,6 @@ import { NextMaintenanceInfo } from '../nextmeintenanceinfo';
  */
 export class NextMaintenancesListComponent {
   static maintenanceStep: number = 10000;
-  maintenancesList: MaintenanceInfo[] = [];
   maintenanceService: MaintenanceService = inject(MaintenanceService);
   nextMaintenances: NextMaintenanceInfo[] = [];
 
@@ -32,12 +31,9 @@ export class NextMaintenancesListComponent {
   /**
    * \brief  Constructor
    */
-  
   constructor() {
-    this.maintenanceService.getAllMaintenances().then((maintenses: MaintenanceInfo[])=>{
-      this.maintenancesList = maintenses;
-    })
-
-    this.nextMaintenances = this.maintenanceService.getNextMaintenances();
+    this.maintenanceService.getNextMaintenances().then((maintenanses: NextMaintenanceInfo[]) => {
+      this.nextMaintenances = maintenanses;
+    });
   }
 }

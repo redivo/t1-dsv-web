@@ -13,12 +13,12 @@ const {createVehicles, getVehicles, UpdateVehicle} = require ('../controllers/ve
  * \param  res  Response data
  */
 router.get('/:licensePlate', async (req, res) => {
-    try {
-      const vehicles = await getVehicles(req.params?.licensePlate);
-      res.status(200).json(vehicles[0]);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+  try {
+    const vehicles = await getVehicles(req.params.licensePlate);
+    res.json(vehicles[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 })
 
 /**************************************************************************************************/
@@ -28,12 +28,12 @@ router.get('/:licensePlate', async (req, res) => {
  * \param  res  Response data
  */
 router.get('/', async (req, res) => {
-    try {
-      const vehicles = await getVehicles();
-      res.status(200).json(vehicles);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+  try {
+    const vehicles = await getVehicles();
+    res.status(200).json(vehicles);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 })
 
 /**************************************************************************************************/

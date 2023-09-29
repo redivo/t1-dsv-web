@@ -60,7 +60,7 @@ app.use('/veiculos', vehicles.router);
 
 // Get review items route
 const itemReview = require('../routes/ItemReview');
-app.use('/revisao', itemReview.router);
+app.use('/maintenances', itemReview.router);
 
 // Define routes for authentication
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));

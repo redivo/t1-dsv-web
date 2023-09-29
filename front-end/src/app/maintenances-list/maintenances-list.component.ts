@@ -31,8 +31,8 @@ export class MaintenancesListComponent {
    * \brief  Constructor
    */
   constructor() {
-    this.maintenanceService.getAllMaintenances().then((maintenses: MaintenanceInfo[])=>{
-      this.maintenancesList = maintenses;
+    this.maintenanceService.getAllMaintenances().then((maintenanses: MaintenanceInfo[]) => {
+      this.maintenancesList = maintenanses;
     })
   }
 }

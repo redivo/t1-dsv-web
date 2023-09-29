@@ -45,7 +45,9 @@ export class VehicleDetailsComponent {
     });
 
     // The next maintenance
-    this.nextMaintenance = this.maintenanceService.getNextMaintenance(licensePlate);
+    this.maintenanceService.getNextMaintenance(licensePlate).then((nextMaintenance) => {
+      this.nextMaintenance = nextMaintenance;
+    });
   }
 
   /************************************************************************************************/
