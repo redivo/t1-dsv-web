@@ -67,9 +67,8 @@ router.put('/', async (req, res) => {
     if (ok) {
         res.json(req.body);
     } else {
-        res.status(500).json({ error: "Error updating vehicle" });
+      res.status(500).json({ error: "Error updating vehicle" });
     }
-    res.json(result);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
