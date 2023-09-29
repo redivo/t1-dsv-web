@@ -36,31 +36,28 @@ const getItemReview =  async (licensePlate) =>
 /**************************************************************************************************/
 /**
  * \brief  Create an review item done
- * \param  itemReview    Review data
- * \param  licensePlate  License Plate related do vehicle
+ * \param  maintenance  Maintenance data
  * \return TRUE if OK, FALSE otherwise
  */
-const createItemReview =  async (itemReview, licensePlate) => {
-  // Get data from input
-  const {description, date, value } = itemReview;
-
+const createItemReview =  async (maintenance) => {
   try {
     // Connect to DB
     const pool = await sql.connect(dbConfig);
 
     // Mount query
     const query = `
-    DECLARE @ID INT = (SELECT licensePlate FROM vehicles WHERE placa = @licensePlate )
-    INSERT INTO maintenances (description, date, value, licensePlate)
-    VALUES (@description, @date, @value, @ID)
+    INSERT INTO maintenances (description, date, value, licensePlate, readOdometer, referenceOdometer)
+    VALUES (@description, @date, @value, @licensePlate, @readOdometer, @referenceOdometer)
     `;
 
     // Execute query
     await pool.request()
-      .input('licensePlate', sql.VarChar, licensePlate)
-      .input('description', sql.VarChar, description)
-      .input('date', sql.Date, date)
-      .input('value', sql.Int, value)
+      .input('licensePlate', sql.VarChar, maintenance.licensePlate)
+      .input('description', sql.VarChar, maintenance.description)
+      .input('date', sql.Date, maintenance.date)
+      .input('value', sql.Int, maintenance.value)
+      .input('readOdometer', sql.Int, maintenance.readOdometer)
+      .input('referenceOdometer', sql.Int, maintenance.referenceOdometer)
       .query(query);
 
     // Return true

@@ -53,7 +53,7 @@ export class VehicleService {
         },
         body: JSON.stringify(vehicle)
       });
-    }catch(error){
+    } catch(error){
       console.log(error);
     }
   }
@@ -64,7 +64,7 @@ export class VehicleService {
    * \param  vehicle  Vehicle info to be edited
    */
   async editVehicle(vehicle: VehicleInfo) {
-    const res = await fetch('http://localhost:3000/veiculos/'+vehicle.licensePlate,{
+    const res = await fetch(this.url + '/veiculos/', {
       method:'PUT',
       headers:{
         'Content-Type':'application/json',

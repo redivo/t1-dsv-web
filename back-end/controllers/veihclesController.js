@@ -41,9 +41,6 @@ const getVehicles =  async (licensePlate) =>
  */
 const createVehicles =  async (vehicle) =>
 {
-  // Get data from input
-  const { name, licensePlate, model, brand, year, category } = vehicle;
-
   try {
     // Connect to DB
     const pool = await sql.connect(dbConfig);
@@ -55,14 +52,14 @@ const createVehicles =  async (vehicle) =>
     `;
 
     // Perform operation
-    await pool.request()
-      .input('name', sql.VarChar, name)
-      .input('licensePlate', sql.VarChar, licensePlate)
-      .input('model', sql.VarChar, model)
-      .input('brand', sql.VarChar, brand)
-      .input('year', sql.Int, year)
-      .input('odometer', sql.Int, odometer)
-      .input('category', sql.VarChar, category)
+    const ret = await pool.request()
+      .input('name', sql.VarChar, vehicle['name'])
+      .input('licensePlate', sql.VarChar, vehicle['licensePlate'])
+      .input('model', sql.VarChar, vehicle['model'])
+      .input('brand', sql.VarChar, vehicle['brand'])
+      .input('year', sql.Int, vehicle['year'])
+      .input('odometer', sql.Int, vehicle['odometer'])
+      .input('category', sql.VarChar, vehicle['category'])
       .query(query);
 
     // Return TRUE
@@ -76,11 +73,10 @@ const createVehicles =  async (vehicle) =>
 /**************************************************************************************************/
 /**
  * \brief  Update a vehicle
- * \param  licensePlate  License plate of vehicle to be updated
  * \param  updateFields  Fields to be updated
  * \return TRUE if OK, FALSE otherwise
  */
-const UpdateVehicle = async (licensePlate, updateFields) => {
+const UpdateVehicle = async (updateFields) => {
   try {
     // Connect to DB
     const pool = await sql.connect(dbConfig);
@@ -96,13 +92,18 @@ const UpdateVehicle = async (licensePlate, updateFields) => {
 
     // Iterate over fields filling query
     for (const [field, value] of Object.entries(updateFields)) {
+      // Decide field type
       const fieldType = (field === 'year') ? sql.Int : (field === 'odometer') ?
           sql.Int
         :
           (field === 'status') ? sql.Bit : sql.VarChar;
 
       query += `${field} = @${field}, `;
-      params.push({ name: field, type: fieldType, value });
+
+      // Skip license plane because it is gonna be parametrized later
+      if (field !== 'licensePlate') {
+        params.push({ name: field, type: fieldType, value });
+      }
     }
 
     // Remove last comma and space
@@ -113,7 +114,7 @@ const UpdateVehicle = async (licensePlate, updateFields) => {
 
     // Run query
     const request = pool.request();
-    request.input('licensePlate', sql.VarChar, licensePlate);
+    request.input('licensePlate', sql.VarChar, updateFields.licensePlate);
     for (const param of params) {
       request.input(param.name, param.type, param.value);
     }

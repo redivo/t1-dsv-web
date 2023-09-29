@@ -30,7 +30,7 @@ export class MaintenanceService {
    * \return  List containing all maintenances
    */
   async getAllMaintenances(): Promise<MaintenanceInfo[]> {
-    const response = await fetch(this.url+'/maintenances');
+    const response = await fetch(this.url + '/maintenances');
     const data = await response.json();
 
     // Iterate over received data and convert string data do Date object
@@ -106,10 +106,15 @@ export class MaintenanceService {
    * \brief  Register a new maintenance
    * \param  maintenance  Maintenance to be stored
    */
-  registerMaintenance(maintenance: MaintenanceInfo) {
-    maintenance.id = this.maintenancesList.length;
+  async registerMaintenance(maintenance: MaintenanceInfo) {
+    const response = await fetch(this.url + '/maintenances', {
+        method:'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(maintenance)
+    });
 
-    // TODO - Call back end when the integration is done
-    this.maintenancesList.push(maintenance);
+    //this.maintenancesList.push(maintenance);
   }
 }
