@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
   try {
     const ok = await createItemReview(req.body);
     if (ok) {
-        res.status(200);
+        res.json(req.body);
     } else {
         res.status(500).json({ error: "Error creating maintenance" });
     }

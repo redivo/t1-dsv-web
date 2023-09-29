@@ -46,7 +46,7 @@ router.post('/', async(req, res) => {
   try {
     const ok = await createVehicles(req.body)
     if (ok) {
-        res.status(200);
+        res.json(req.body);
     } else {
         res.status(500).json({ error: "Error creating vehicle" });
     }
@@ -65,7 +65,7 @@ router.put('/', async (req, res) => {
   try {
     const ok = await UpdateVehicle(req.body);
     if (ok) {
-        res.status(200);
+        res.json(req.body);
     } else {
         res.status(500).json({ error: "Error updating vehicle" });
     }
