@@ -37,18 +37,6 @@ export class VehiclesListComponent
 
       // Iterate over received vehicles and not use vehicles that are not completely filled
       for (let i = 0; i < vehiclesList.length; i++) {
-        if (!vehiclesList[i]["brand"]
-            || !vehiclesList[i]["category"]
-            || !vehiclesList[i]["licensePlate"]
-            || !vehiclesList[i]["model"]
-            || !vehiclesList[i]["name"]
-            || !vehiclesList[i]["odometer"]
-            || !vehiclesList[i]["year"]) {
-          // Skip
-          continue;
-        }
-
-        // If it is completely filled, add
         this.vehiclesList.push(vehiclesList[i]);
       }
     });

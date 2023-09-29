@@ -14,12 +14,9 @@ const {getItemReview, createItemReview} = require ('../controllers/itemReviewCon
  */
 router.get('/:licensePlate', async (req, res) => {
   try {
-    console.log("Maintenances plate");
     const itemReview = await getItemReview(req.params.licensePlate);
-    console.log(itemReview);
     res.json(itemReview);
   } catch (error) {
-    console.log("Catch");
     res.status(500).json({ error: error.message });
   }
 });
@@ -47,7 +44,7 @@ router.get('/', async (req, res) => {
  */
 router.post('/', async (req, res) => {
   try {
-    const ok = await createItemReview (req.body, req.query?.placa);
+    const ok = await createItemReview(req.body);
     if (ok) {
         res.status(200);
     } else {

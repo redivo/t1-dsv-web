@@ -30,7 +30,7 @@ router.get('/:licensePlate', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const vehicles = await getVehicles();
-    res.status(200).json(vehicles);
+    res.json(vehicles);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -42,9 +42,9 @@ router.get('/', async (req, res) => {
  * \param  req  Request data
  * \param  res  Response data
  */
-router.post('/', async (req, res) => {
+router.post('/', async(req, res) => {
   try {
-    const ok = await createVehicles (req.body)
+    const ok = await createVehicles(req.body)
     if (ok) {
         res.status(200);
     } else {
@@ -62,11 +62,8 @@ router.post('/', async (req, res) => {
  * \param  res  Response data
  */
 router.put('/', async (req, res) => {
-  const placa = req.query.placa;
-  const updateFields = req.body;
-
   try {
-    const ok = await UpdateVehicle(placa, updateFields);
+    const ok = await UpdateVehicle(req.body);
     if (ok) {
         res.status(200);
     } else {

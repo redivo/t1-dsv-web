@@ -67,31 +67,11 @@ export class AddEditVehicleComponent {
 
   /************************************************************************************************/
   /**
-   * \brief  Constructor
+   * \brief  Create form group
    * \param  router  Router object
    */
-  constructor(private router: Router) {
-    this.router = router;
-
-    // If license plate was given, its an edition
-    if (String(this.route.snapshot.url).includes('editVehicle')) {
-      this.title = 'Edit vehicle';
-      this.button = "Edit";
-      let vehicle: VehicleInfo| undefined
-         this.vehicleService.getVehicle(this.route.snapshot.params['licensePlate']);
-      if (vehicle) {
-        this.initNameVal = vehicle.name;
-        this.initLicensePlateVal = vehicle.licensePlate;
-        this.initBrandVal = vehicle.brand;
-        this.initModelVal = vehicle.model;
-        this.initYearVal = vehicle.year;
-        this.initOdometerVal = vehicle.odometer;
-        this.initCategoryVal = vehicle.category;
-      }
-    }
-
-    // Create form data
-    this.vehicleForm = new FormGroup({
+  createFormGroup() {
+    let form = new FormGroup({
       name: new FormControl(this.initNameVal, [Validators.required,
                                  Validators.minLength(1),
                                  Validators.maxLength(20)]),
@@ -112,5 +92,38 @@ export class AddEditVehicleComponent {
                                      Validators.minLength(1),
                                      Validators.maxLength(20)]),
     });
+
+    return form;
+  }
+
+  /************************************************************************************************/
+  /**
+   * \brief  Constructor
+   * \param  router  Router object
+   */
+  constructor(private router: Router) {
+    this.router = router;
+
+    // Create form data
+    this.vehicleForm = this.createFormGroup();
+
+    // If license plate was given, its an edition
+    if (String(this.route.snapshot.url).includes('editVehicle')) {
+      this.title = 'Edit vehicle';
+      this.button = "Edit";
+      this.edit = true;
+      this.vehicleService.getVehicle(this.route.snapshot.params['licensePlate']).then((vehicle) => {
+        if (vehicle) {
+          this.initNameVal = vehicle.name;
+          this.initLicensePlateVal = vehicle.licensePlate;
+          this.initBrandVal = vehicle.brand;
+          this.initModelVal = vehicle.model;
+          this.initYearVal = vehicle.year;
+          this.initOdometerVal = vehicle.odometer;
+          this.initCategoryVal = vehicle.category;
+        }
+        this.vehicleForm = this.createFormGroup();
+      });
+    }
   }
 }
