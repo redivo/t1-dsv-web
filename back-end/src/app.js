@@ -4,6 +4,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const { generateToken } = require('authentication.js')
 
 /**************************************************************************************************/
 /* Server Configuration                                                                           */
@@ -67,6 +68,10 @@ app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'em
 app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/',
                                                                    failureRedirect: '/login'
                                                                  }));
+
+app.get('/auth/getToken/:user',  async(req, res) => {
+    res.json({"token" : generateToken(req.params.user)});
+});
 
 // TODO remove it if not used
 //// Protected route example

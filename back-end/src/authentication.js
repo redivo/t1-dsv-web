@@ -2,8 +2,7 @@ const jwt = require('jsonwebtoken');
 const secretKey = 'your-secret-key';
 
 
-// generate is create in the client-side (front), but I put here to show the Logic
-function generateToken(user) {
+// generate is create in the client-side (front), but I put here to show the Logicfunction generateToken(user) {
   const payload = {
     userId: user.id,
     // Add any other relevant user data to the payload
@@ -42,3 +41,4 @@ const requireAuthentication = function (req, res, next) {
 }
 
 exports.requireAuthentication = requireAuthentication;
+exports.generateToken = generateToken;
