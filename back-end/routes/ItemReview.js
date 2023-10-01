@@ -1,6 +1,8 @@
 const app = require('express');
 const router = app.Router();
 const {getItemReview, createItemReview} = require ('../controllers/itemReviewController')
+const { requireAuthentication } = require('../src/authentication.js')
+
 
 /**************************************************************************************************/
 /* Available Routes                                                                               */
@@ -12,7 +14,7 @@ const {getItemReview, createItemReview} = require ('../controllers/itemReviewCon
  * \param  req  Request data
  * \param  res  Response data
  */
-router.get('/:licensePlate', async (req, res) => {
+router.get('/:licensePlate', requireAuthentication, async (req, res) => {
   try {
     const itemReview = await getItemReview(req.params.licensePlate);
     res.json(itemReview);
@@ -27,7 +29,7 @@ router.get('/:licensePlate', async (req, res) => {
  * \param  req  Request data
  * \param  res  Response data
  */
-router.get('/', async (req, res) => {
+router.get('/', requireAuthentication, async (req, res) => {
   try {
     const itemReview = await getItemReview();
     res.json(itemReview);
@@ -42,7 +44,7 @@ router.get('/', async (req, res) => {
  * \param  req  Request data
  * \param  res  Response data
  */
-router.post('/', async (req, res) => {
+router.post('/', requireAuthentication, async (req, res) => {
   try {
     const ok = await createItemReview(req.body);
     if (ok) {

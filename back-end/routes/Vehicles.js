@@ -1,6 +1,8 @@
 const app = require('express');
 const router = app.Router();
 const {createVehicles, getVehicles, UpdateVehicle} = require ('../controllers/veihclesController')
+const { requireAuthentication } = require('../src/authentication.js')
+
 
 /**************************************************************************************************/
 /* Available Routes                                                                               */
@@ -12,7 +14,7 @@ const {createVehicles, getVehicles, UpdateVehicle} = require ('../controllers/ve
  * \param  req  Request data
  * \param  res  Response data
  */
-router.get('/:licensePlate', async (req, res) => {
+router.get('/:licensePlate', requireAuthentication, async (req, res) => {
   try {
     const vehicles = await getVehicles(req.params.licensePlate);
     res.json(vehicles[0]);
@@ -27,7 +29,7 @@ router.get('/:licensePlate', async (req, res) => {
  * \param  req  Request data
  * \param  res  Response data
  */
-router.get('/', async (req, res) => {
+router.get('/', requireAuthentication, async (req, res) => {
   try {
     const vehicles = await getVehicles();
     res.json(vehicles);
@@ -42,7 +44,7 @@ router.get('/', async (req, res) => {
  * \param  req  Request data
  * \param  res  Response data
  */
-router.post('/', async(req, res) => {
+router.post('/', requireAuthentication,  async(req, res) => {
   try {
     const ok = await createVehicles(req.body)
     if (ok) {
@@ -61,7 +63,7 @@ router.post('/', async(req, res) => {
  * \param  req  Request data
  * \param  res  Response data
  */
-router.put('/', async (req, res) => {
+router.put('/', requireAuthentication, async (req, res) => {
   try {
     const ok = await UpdateVehicle(req.body);
     if (ok) {
