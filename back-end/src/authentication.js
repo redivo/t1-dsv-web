@@ -2,12 +2,12 @@ const jwt = require('jsonwebtoken');
 const secretKey = 'your-secret-key';
 
 
-// generate is create in the client-side (front), but I put here to show the Logicfunction generateToken(user) {
+// generate is create in the client-side (front), but I put here to show the Logic
+function generateToken(user) {
   const payload = {
-    userId: user.id,
+    userId: user,
     // Add any other relevant user data to the payload
   };
-
   return jwt.sign(payload, secretKey, { expiresIn: '1h' }); // Token expires in 1 hour
 }
 

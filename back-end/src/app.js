@@ -4,7 +4,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const bodyParser = require('body-parser');
-const { generateToken } = require('authentication.js')
+const { generateToken } = require('./authentication.js')
 
 /**************************************************************************************************/
 /* Server Configuration                                                                           */
@@ -70,6 +70,7 @@ app.get('/auth/google/callback', passport.authenticate('google', { successRedire
                                                                  }));
 
 app.get('/auth/getToken/:user',  async(req, res) => {
+  console.log('token')
     res.json({"token" : generateToken(req.params.user)});
 });
 
