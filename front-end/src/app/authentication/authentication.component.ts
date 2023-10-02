@@ -22,6 +22,14 @@ export class AuthenticationComponent {
 
   /************************************************************************************************/
   /**
+   * \brief  Redirect to authentication link
+   */
+  goToAuthentication() {
+    window.location.href='http://www.google.com/';
+  }
+
+  /************************************************************************************************/
+  /**
    * \brief  Constructor method
    */
   constructor() {
