@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { AuthenticationService } from '../authentication.service';
+
+/**************************************************************************************************/
 
 @Component({
   selector: 'app-authentication',
@@ -9,27 +12,20 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./authentication.component.css']
 })
 
+/**************************************************************************************************/
 /**
  * \brief Authentication component class
  */
 export class AuthenticationComponent {
-
-  // API
-  url = 'http://localhost:3000';
-
   token = '';
+  authService: AuthenticationService = inject(AuthenticationService);
 
-  async loadToken() {
-    const resp = await fetch(this.url + '/auth/getToken/2');
-    const data = await resp.json();
-    return data.token;
-  }
-
+  /************************************************************************************************/
   /**
    * \brief  Constructor method
    */
   constructor() {
-    this.loadToken().then((token) => {
+    this.authService.loadToken().then((token) => {
       this.token = token;
       console.log(this.token);
     });

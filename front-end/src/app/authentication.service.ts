@@ -15,4 +15,10 @@ export class AuthenticationService {
   // API
   url = 'http://localhost:3000';
 
+  async loadToken() {
+    const resp = await fetch(this.url + '/auth/getToken/2');
+    const data = await resp.json();
+    return data.token;
+  }
+
 }
