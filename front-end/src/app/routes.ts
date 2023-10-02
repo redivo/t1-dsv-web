@@ -5,10 +5,19 @@ import { VehiclesListComponent } from './vehicles-list/vehicles-list.component';
 import { AddEditVehicleComponent } from './add-edit-vehicle/add-edit-vehicle.component';
 import { MaintenancesComponent } from './maintenances/maintenances.component';
 import { RegisterMaintenanceComponent } from './register-maintenance/register-maintenance.component';
+import { AuthenticationComponent } from './authentication/authentication.component';
 
 const routeConfig: Routes = [
   {
     path: '',
+    component: AuthenticationComponent,
+  },
+  {
+    path: 'error',
+    component: AuthenticationComponent,
+  },
+  {
+    path: 'menu',
     component: HomeComponent,
   },
   {

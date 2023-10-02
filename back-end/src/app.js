@@ -78,19 +78,8 @@ app.get('/auth/google/callback', passport.authenticate('google', { successRedire
                                                                  }));
 
 app.get('/auth/getToken/:user',  async(req, res) => {
-  console.log('token')
-    res.json({"token" : generateToken(req.params.user)});
+  res.status(200).json({"token" : generateToken(req.params.user)});
 });
-
-// TODO remove it if not used
-//// Protected route example
-//app.get('/', (req, res) => {
-//  if (req.isAuthenticated()) {
-//    res.send(`Hello, ${req.user.displayName}!`);
-//  } else {
-//    res.redirect('/auth/google');
-//  }
-//});
 
 /**************************************************************************************************/
 /* Finalizing server start...                                                                     */
