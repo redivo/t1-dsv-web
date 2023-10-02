@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { VehicleInfo } from './vehicleinfo';
+import { generate } from 'rxjs';
+import { generateToken } from './authentication.service';
 
 /**************************************************************************************************/
 
@@ -22,7 +24,10 @@ export class VehicleService {
    * \return  List containing all vehicles
    */
   async getAllVehicles(): Promise<VehicleInfo[]>{
-    const response = await fetch(this.url + '/vehicles');
+    const response = await fetch(this.url + '/vehicles', {
+    headers: {
+      'Authorization': `Bearer + ${generateToken({id: "test"})}`,
+    }});
     const data = await response.json();
     return data;
   }

@@ -4,7 +4,12 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const bodyParser = require('body-parser');
+const { generateToken } = require('./authentication.js')
+require('dotenv').config();
 
+
+CLIENT_ID = process.env.CLIENT_ID
+CLIENT_SECRET = process.env.CLIENT_SECRET
 /**************************************************************************************************/
 /* Server Configuration                                                                           */
 /**************************************************************************************************/
@@ -23,7 +28,10 @@ app.use(bodyParser.json());
 /**************************************************************************************************/
 
 // Configure session middleware
-app.use(session({ secret: 'your-secret-key', resave: false, saveUninitialized: true }));
+app.use(session({ 
+  secret: 'your-secret-key', 
+  resave: false, 
+  saveUninitialized: true }));
 
 // Initialize Passport and session management
 app.use(passport.initialize());
@@ -33,9 +41,10 @@ app.use(passport.session());
 passport.use(
   new GoogleStrategy(
     {
-      clientID: 'your-client-id',
-      clientSecret: 'your-client-secret',
-      callbackURL: 'http://localhost:3000/auth/google/callback', // Your callback URL
+      clientID: CLIENT_ID,
+      clientSecret: CLIENT_SECRET,
+      callbackURL: 'http://localhost:3000/auth/google/callback',
+      scope: ['profile', 'email']
     },
     (accessToken, refreshToken, profile, done) => {
       // This callback is called after successful authentication.
@@ -64,9 +73,14 @@ app.use('/maintenances', itemReview.router);
 
 // Define routes for authentication
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: '/',
-                                                                   failureRedirect: '/login'
+app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: 'http://localhost:4200/menu',
+                                                                   failureRedirect: '/error'
                                                                  }));
+
+app.get('/auth/getToken/:user',  async(req, res) => {
+  console.log('token')
+    res.json({"token" : generateToken(req.params.user)});
+});
 
 // TODO remove it if not used
 //// Protected route example
