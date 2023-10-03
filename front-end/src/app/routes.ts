@@ -13,10 +13,6 @@ const routeConfig: Routes = [
     component: AuthenticationComponent,
   },
   {
-    path: 'auth/ok/:token',
-    component: AuthenticationComponent,
-  },
-  {
     path: 'error',
     component: AuthenticationComponent,
   },

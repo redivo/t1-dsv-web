@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService } from '../authentication.service';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
 /**************************************************************************************************/
@@ -35,9 +35,13 @@ export class AuthenticationComponent {
   /**
    * \brief  Constructor method
    */
-  constructor() {
-    this.token = String(this.route.snapshot.params['token']);
-    this.authService.saveToken(this.token);
-    console.log(this.token);
+  constructor(private router: Router) {
+    this.router = router;
+
+    this.authService.isLogged().then((is_logged) => {
+      if (is_logged) {
+        this.router.navigateByUrl('/menu');
+      }
+    });
   }
 }

@@ -16,15 +16,14 @@ export class AuthenticationService {
   // API
   url = 'http://localhost:3000';
 
-  saveToken(token: string) {
-    this.token = token;
-  }
+  async isLogged() {
+    const resp = await fetch(this.url + '/auth/get', {
+      method: "GET",
+      credentials: 'include',
+      headers: { "Content-Type": "application/json" },
+    });
 
-  // TODO alterar para getToken()
-  async loadToken() {
-    const resp = await fetch(this.url + '/auth/getToken/4');
-    const data = await resp.json();
-    return data.token;
+    return (resp.status == 200);
   }
 
 }

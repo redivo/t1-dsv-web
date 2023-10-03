@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { VehicleInfo } from './vehicleinfo';
-import { AuthenticationService } from './authentication.service';
 
 /**************************************************************************************************/
 
@@ -13,8 +12,6 @@ import { AuthenticationService } from './authentication.service';
  * \brief  Service class of vehicle service
  */
 export class VehicleService {
-  authService: AuthenticationService = inject(AuthenticationService);
-
   // API
   url = 'http://localhost:3000';
 
@@ -24,8 +21,11 @@ export class VehicleService {
    * \return  List containing all vehicles
    */
   async getAllVehicles(): Promise<VehicleInfo[]>{
-    const token = await this.authService.loadToken();
-    const response = await fetch(this.url + '/vehicles');
+    const response = await fetch(this.url + '/vehicles', {
+      method: "GET",
+      credentials: 'include',
+      headers: { "Content-Type": "application/json" },
+    });
 
     const data = await response.json();
     return data;
@@ -38,7 +38,11 @@ export class VehicleService {
    * \return  VehicleInfo is it was found, undefined otherwise
    */
   async getVehicle(licensePlate: string): Promise<VehicleInfo | undefined> {
-    const response = await fetch(this.url + '/vehicles/' + licensePlate);
+    const response = await fetch(this.url + '/vehicles/' + licensePlate, {
+      method: "GET",
+      credentials: 'include',
+      headers: { "Content-Type": "application/json" },
+    });
     const data = await response.json();
     return data;
   }
@@ -52,6 +56,7 @@ export class VehicleService {
     try{
       const res = await fetch(this.url + '/vehicles', {
         method:'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -70,6 +75,7 @@ export class VehicleService {
   async editVehicle(vehicle: VehicleInfo) {
     const res = await fetch(this.url + '/vehicles/', {
       method:'PUT',
+      credentials: 'include',
       headers:{
         'Content-Type':'application/json',
       },
