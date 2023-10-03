@@ -1,18 +1,29 @@
-import * as jwt from 'jsonwebtoken';
+import { Injectable } from '@angular/core';
 
+/**************************************************************************************************/
 
-type User = {
-  id: string
-}
+@Injectable({
+  providedIn: 'root'
+})
 
-const SK = "your-secret-key";
+/**************************************************************************************************/
+/**
+ * \brief  Service class of vehicle service
+ */
+export class AuthenticationService {
+  token = '';
 
-// generate is create in the client-side (front), but I put here to show the Logic
-export function generateToken(user: User) {
-  const payload = {
-    userId: user.id,
-    // Add any other relevant user data to the payload
-  };
-  
-  return jwt.sign(payload, SK, { expiresIn: '1h' }); // Token expires in 1 hour
+  // API
+  url = 'http://localhost:3000';
+
+  async isLogged() {
+    const resp = await fetch(this.url + '/auth/get', {
+      method: "GET",
+      credentials: 'include',
+      headers: { "Content-Type": "application/json" },
+    });
+
+    return (resp.status == 200);
+  }
+
 }

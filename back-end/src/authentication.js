@@ -11,8 +11,6 @@ function generateToken(user) {
   return jwt.sign(payload, secretKey, { expiresIn: '1h' }); // Token expires in 1 hour
 }
 
-
-
 function verifyToken(token) {
   try {
     return jwt.verify(token, secretKey);
@@ -23,12 +21,12 @@ function verifyToken(token) {
 
 // guys, this is our middleware to pass in every single route
 const requireAuthentication = function (req, res, next) {
-  // Get the token from the request headers
-  const token = req.headers.authorization;
+  // Get the token from the request session
+  const token = req.session.token;
 
   // Check if the token is present and valid
   if (token) {
-    const user = verifyToken(token.replace('Bearer ', '')); // Remove 'Bearer ' from the token string
+    const user = verifyToken(token); // Remove 'Bearer ' from the token string
     if (user) {
       req.user = user; // Set user data on the request object
       next();

@@ -5,11 +5,12 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const { generateToken } = require('./authentication.js')
+const { requireAuthentication } = require('./authentication.js')
 require('dotenv').config();
 
 
-CLIENT_ID = process.env.CLIENT_ID
-CLIENT_SECRET = process.env.CLIENT_SECRET
+CLIENT_ID = process.env.CLIENT_ID;
+CLIENT_SECRET = process.env.CLIENT_SECRET;
 /**************************************************************************************************/
 /* Server Configuration                                                                           */
 /**************************************************************************************************/
@@ -18,7 +19,10 @@ CLIENT_SECRET = process.env.CLIENT_SECRET
 const app = express();
 
 // Configure CORS in order to allow Cross-Origin Resource Sharing with front end server
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 
 // Configure body parser for JSON requests
 app.use(bodyParser.json());
@@ -26,12 +30,10 @@ app.use(bodyParser.json());
 /**************************************************************************************************/
 /* Authentication                                                                                 */
 /**************************************************************************************************/
-
 // Configure session middleware
-app.use(session({ 
-  secret: 'your-secret-key', 
-  resave: false, 
-  saveUninitialized: true }));
+app.use(session({
+  secret: 'your-secret-key',
+}));
 
 // Initialize Passport and session management
 app.use(passport.initialize());
@@ -71,26 +73,26 @@ app.use('/vehicles', vehicles.router);
 const itemReview = require('../routes/ItemReview');
 app.use('/maintenances', itemReview.router);
 
+
+
 // Define routes for authentication
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: 'http://localhost:4200/menu',
+app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: 'http://localhost:3000/auth/ok',
                                                                    failureRedirect: '/error'
                                                                  }));
 
-app.get('/auth/getToken/:user',  async(req, res) => {
-  console.log('token')
-    res.json({"token" : generateToken(req.params.user)});
+app.get('/auth/ok',  async(req, res) => {
+  req.session.token = generateToken(0);
+  res.redirect("http://localhost:4200/menu");
 });
 
-// TODO remove it if not used
-//// Protected route example
-//app.get('/', (req, res) => {
-//  if (req.isAuthenticated()) {
-//    res.send(`Hello, ${req.user.displayName}!`);
-//  } else {
-//    res.redirect('/auth/google');
-//  }
-//});
+app.get('/auth/get',  async(req, res) => {
+  requireAuthentication(req, res, () => {res.json()});
+});
+
+app.get('/auth/getToken/:user',  async(req, res) => {
+  res.status(200).json({"token" : generateToken(req.params.user)});
+});
 
 /**************************************************************************************************/
 /* Finalizing server start...                                                                     */

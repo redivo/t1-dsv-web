@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { VehicleInfo } from './vehicleinfo';
-import { generate } from 'rxjs';
-import { generateToken } from './authentication.service';
 
 /**************************************************************************************************/
 
@@ -14,7 +12,6 @@ import { generateToken } from './authentication.service';
  * \brief  Service class of vehicle service
  */
 export class VehicleService {
-
   // API
   url = 'http://localhost:3000';
 
@@ -25,9 +22,11 @@ export class VehicleService {
    */
   async getAllVehicles(): Promise<VehicleInfo[]>{
     const response = await fetch(this.url + '/vehicles', {
-    headers: {
-      'Authorization': `Bearer + ${generateToken({id: "test"})}`,
-    }});
+      method: "GET",
+      credentials: 'include',
+      headers: { "Content-Type": "application/json" },
+    });
+
     const data = await response.json();
     return data;
   }
@@ -39,7 +38,11 @@ export class VehicleService {
    * \return  VehicleInfo is it was found, undefined otherwise
    */
   async getVehicle(licensePlate: string): Promise<VehicleInfo | undefined> {
-    const response = await fetch(this.url + '/vehicles/' + licensePlate);
+    const response = await fetch(this.url + '/vehicles/' + licensePlate, {
+      method: "GET",
+      credentials: 'include',
+      headers: { "Content-Type": "application/json" },
+    });
     const data = await response.json();
     return data;
   }
@@ -53,6 +56,7 @@ export class VehicleService {
     try{
       const res = await fetch(this.url + '/vehicles', {
         method:'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -71,6 +75,7 @@ export class VehicleService {
   async editVehicle(vehicle: VehicleInfo) {
     const res = await fetch(this.url + '/vehicles/', {
       method:'PUT',
+      credentials: 'include',
       headers:{
         'Content-Type':'application/json',
       },
