@@ -76,8 +76,6 @@ app.use('/maintenances', itemReview.router);
 
 
 // Define routes for authentication
-const authentication = require('../routes/Authentication');
-app.use('/auth/', authentication.router);
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: 'http://localhost:3000/auth/ok',
                                                                    failureRedirect: '/error'
