@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { VehicleInfo } from './vehicleinfo';
+import { AuthenticationService } from './authentication.service';
 
 /**************************************************************************************************/
 
@@ -12,6 +13,7 @@ import { VehicleInfo } from './vehicleinfo';
  * \brief  Service class of vehicle service
  */
 export class VehicleService {
+  authService: AuthenticationService = inject(AuthenticationService);
 
   // API
   url = 'http://localhost:3000';
@@ -22,7 +24,9 @@ export class VehicleService {
    * \return  List containing all vehicles
    */
   async getAllVehicles(): Promise<VehicleInfo[]>{
+    const token = await this.authService.loadToken();
     const response = await fetch(this.url + '/vehicles');
+
     const data = await response.json();
     return data;
   }

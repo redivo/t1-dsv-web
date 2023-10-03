@@ -1,13 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService } from '../authentication.service';
+import { RouterLink } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 /**************************************************************************************************/
 
 @Component({
   selector: 'app-authentication',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './authentication.component.html',
   styleUrls: ['./authentication.component.css']
 })
@@ -18,6 +20,7 @@ import { AuthenticationService } from '../authentication.service';
  */
 export class AuthenticationComponent {
   token = '';
+  route: ActivatedRoute = inject(ActivatedRoute);
   authService: AuthenticationService = inject(AuthenticationService);
 
   /************************************************************************************************/
@@ -25,7 +28,7 @@ export class AuthenticationComponent {
    * \brief  Redirect to authentication link
    */
   goToAuthentication() {
-    window.location.href='http://www.google.com/';
+    window.location.href='http://localhost:3000/auth/google';
   }
 
   /************************************************************************************************/
@@ -33,9 +36,8 @@ export class AuthenticationComponent {
    * \brief  Constructor method
    */
   constructor() {
-    this.authService.loadToken().then((token) => {
-      this.token = token;
-      console.log(this.token);
-    });
+    this.token = String(this.route.snapshot.params['token']);
+    this.authService.saveToken(this.token);
+    console.log(this.token);
   }
 }

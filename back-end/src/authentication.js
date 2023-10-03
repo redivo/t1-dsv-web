@@ -23,6 +23,9 @@ function verifyToken(token) {
 
 // guys, this is our middleware to pass in every single route
 const requireAuthentication = function (req, res, next) {
+  console.log("requireAuthentication() called");
+  console.log(req.session);
+
   // Get the token from the request headers
   const token = req.headers.authorization;
 

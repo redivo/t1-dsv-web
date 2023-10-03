@@ -30,11 +30,16 @@ router.get('/:licensePlate', requireAuthentication, async (req, res) => {
  * \param  res  Response data
  */
 router.get('/', requireAuthentication, async (req, res) => {
-  try {
-    const vehicles = await getVehicles();
-    res.json(vehicles);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  console.log("Get All Vehicles");
+  if (req.isAuthenticated()) {
+
+    console.log("Is authenticated!!!");
+    try {
+      const vehicles = await getVehicles();
+      res.json(vehicles);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
   }
 })
 

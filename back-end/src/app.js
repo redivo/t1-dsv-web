@@ -7,9 +7,13 @@ const bodyParser = require('body-parser');
 const { generateToken } = require('./authentication.js')
 require('dotenv').config();
 
+const MemoryStore = require('memorystore')(session);
 
-CLIENT_ID = process.env.CLIENT_ID
-CLIENT_SECRET = process.env.CLIENT_SECRET
+
+
+
+CLIENT_ID = process.env.CLIENT_ID;
+CLIENT_SECRET = process.env.CLIENT_SECRET;
 /**************************************************************************************************/
 /* Server Configuration                                                                           */
 /**************************************************************************************************/
@@ -28,10 +32,25 @@ app.use(bodyParser.json());
 /**************************************************************************************************/
 
 // Configure session middleware
-app.use(session({ 
-  secret: 'your-secret-key', 
-  resave: false, 
-  saveUninitialized: true }));
+//app.use(session({
+//  secret: 'your-secret-key',
+//  resave: false,
+//  saveUninitialized: true,
+//  cookie: {
+//    secure: true,
+//    token: '',
+//    maxAge: (60 * 60 *1000),
+//  },
+//}));
+
+app.use(session({
+    cookie: { maxAge: 86400000 },
+    store: new MemoryStore({
+      checkPeriod: 86400000 // prune expired entries every 24h
+    }),
+    resave: false,
+    secret: 'keyboard cat'
+}))
 
 // Initialize Passport and session management
 app.use(passport.initialize());
@@ -71,15 +90,24 @@ app.use('/vehicles', vehicles.router);
 const itemReview = require('../routes/ItemReview');
 app.use('/maintenances', itemReview.router);
 
+let userId = 1;
+app.get('/auth/ok',  async(req, res) => {
+  req.session.token = generateToken(userId);
+  console.log(req.session);
+  res.redirect("http://localhost:4200/menu");
+});
+
 // Define routes for authentication
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: 'http://localhost:4200/menu',
+app.get('/auth/google/callback', passport.authenticate('google', { successRedirect: 'http://localhost:3000/auth/ok',
                                                                    failureRedirect: '/error'
                                                                  }));
 
 app.get('/auth/getToken/:user',  async(req, res) => {
   res.status(200).json({"token" : generateToken(req.params.user)});
 });
+
+
 
 /**************************************************************************************************/
 /* Finalizing server start...                                                                     */
