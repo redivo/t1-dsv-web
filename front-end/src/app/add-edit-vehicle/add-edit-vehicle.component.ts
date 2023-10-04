@@ -57,12 +57,11 @@ export class AddEditVehicleComponent {
     // Call addition or edition of vehicle service
     if (this.edit) {
       this.vehicleService.editVehicle(vehicle);
+      this.router.navigateByUrl('/vehicleDetails/' + this.vehicleForm.value.licensePlate);
     } else {
       this.vehicleService.addVehicle(vehicle);
+      this.router.navigateByUrl('/vehicleList');
     }
-
-    // Redirect to vehicle list
-    this.router.navigateByUrl('/vehicleList');
   }
 
   /************************************************************************************************/
