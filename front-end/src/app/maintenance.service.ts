@@ -51,19 +51,22 @@ export class MaintenanceService {
    * \return  Reference odometer
    */
   getNextMaintenanceOdometer(vehicle: VehicleInfo): number {
-    // Calculate the rounded km based on read odometer
-    let roundedOdo = Math.round(vehicle.odometer/MaintenanceService.maintenanceStep)
-        * MaintenanceService.maintenanceStep;
+    let next = 0;
+    this.maintenancesList.forEach((maintenance) => {
+      // Skip other vehicles
+      if (maintenance.licensePlate != vehicle.licensePlate) {
+        return;
+      }
 
-    // If the maintenance was already done, get the next
-    if (this.maintenancesList.find(maintenance =>
-                                   (maintenance.licensePlate.toLowerCase()
-                                        === vehicle.licensePlate.toLowerCase()
-                                   && maintenance.referenceOdometer === roundedOdo))) {
-      roundedOdo += MaintenanceService.maintenanceStep;
-    }
+      // Update next if the done maintenance is greater than older one
+      if (maintenance.referenceOdometer > next) {
+        next = maintenance.referenceOdometer;
+      }
+    });
 
-    return roundedOdo;
+    next += MaintenanceService.maintenanceStep;
+
+    return next;
   }
 
   /************************************************************************************************/

@@ -1,11 +1,23 @@
 # Pedramoura Vehicles Management
 System to manage vehicles of Pedramoura and their maintencnaces.
+Firstly, be sure you have NodeJS, NPM and Angular installed.
 
 ## Front End
-For while front end has only sample data and do not talk to back end.
-The next step is to integrate front end and back end.
+To run front end server, run:
+ - `cd front-end`
+ - `npm install`
+ - `ng serve`
 
-### How to run
-Firstly you have to have NodeJS and NPM installed into your machine.
-After that, enter in root directory of this repository and type `npm install` then `ng serve`.
 The server will be accessible through http://localhost:4200/.
+
+## Back End
+To run front end server, run:
+ - `cd back-end`
+ - `npm install`
+ - `npm run dev`
+
+The server will be accessible through http://localhost:3000/.
+
+## Database
+Please setup a SQL Server DB, configure `back-end/configs/DBConfig.js` and run the script contained
+in `src/BD_PEDRAMOURA.sql`
