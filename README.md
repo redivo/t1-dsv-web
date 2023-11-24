@@ -18,6 +18,14 @@ To run front end server, run:
 
 The server will be accessible through http://localhost:3000/.
 
+## NGINX Proxy
+To set up an NGINX proxy for routing requests between the front-end and back-end services, use Docker Compose:
+
+- Ensure Docker is installed and running.
+- Use the docker-compose.yml file located at the root of the project.
+- Run `docker-compose up --build`` to start the services.
+- NGINX will route requests from http://localhost to the appropriate service.
+
 ## Database
 Please setup a SQL Server DB, configure `back-end/configs/DBConfig.js` and run the script contained
 in `src/BD_PEDRAMOURA.sql`
