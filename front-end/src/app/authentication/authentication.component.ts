@@ -28,7 +28,7 @@ export class AuthenticationComponent {
    * \brief  Redirect to authentication link
    */
   goToAuthentication() {
-    window.location.href='http://localhost:3000/auth/google';
+    window.location.href='http://localhost/auth/google';
   }
 
   /************************************************************************************************/

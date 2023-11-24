@@ -14,7 +14,7 @@ export class AuthenticationService {
   token = '';
 
   // API
-  url = 'http://localhost:3000';
+  url = 'http://localhost';
 
   async isLogged() {
     const resp = await fetch(this.url + '/auth/get', {

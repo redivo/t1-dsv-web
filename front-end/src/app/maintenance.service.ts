@@ -21,7 +21,7 @@ export class MaintenanceService {
   nextMaintenances: NextMaintenanceInfo[] = [];
 
   // API
-  url = 'http://localhost:3000';
+  url = 'http://localhost';
   maintenancesList: MaintenanceInfo[] = [];
 
   /************************************************************************************************/

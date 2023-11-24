@@ -13,7 +13,7 @@ import { VehicleInfo } from './vehicleinfo';
  */
 export class VehicleService {
   // API
-  url = 'http://localhost:3000';
+  url = 'http://localhost';
 
   /************************************************************************************************/
   /**
